@@ -32,8 +32,10 @@
             placeholder="••••••••">
         </div>
 
+        <p id="auth-message" class="text-sm text-center hidden"></p>
+
         <div class="flex flex-col gap-3 pt-4">
-          <button id="btnLogin" type="button" class="text-[20px] px-8 py-4 bg-gradient-to-r from-green-500 to-cyan-500 text-white font-bold rounded-full transition-transform transform-gpu hover:-translate-y-1 hover:shadow-lg">Sign In</button>
+          <button id="btn-login" type="button" class="text-[20px] px-8 py-4 bg-gradient-to-r from-green-500 to-cyan-500 text-white font-bold rounded-full transition-transform transform-gpu hover:-translate-y-1 hover:shadow-lg">Sign In</button>
           
           <div class="relative flex py-2 items-center">
             <div class="flex-grow border-t border-slate-200"></div>
@@ -41,7 +43,7 @@
             <div class="flex-grow border-t border-slate-200"></div>
           </div>
 
-          <button id="btnRegister" type="button" class="text-[20px] px-8 py-4 bg-gradient-to-r from-green-500 to-cyan-500 text-white font-bold rounded-full transition-transform transform-gpu hover:-translate-y-1 hover:shadow-lg">Create an Account</button>
+          <button id="btn-register" type="button" class="text-[20px] px-8 py-4 bg-gradient-to-r from-green-500 to-cyan-500 text-white font-bold rounded-full transition-transform transform-gpu hover:-translate-y-1 hover:shadow-lg">Create an Account</button>
         </div>
 
       </form>
@@ -50,7 +52,7 @@
     <div id="dashboard-container" class="hidden w-full max-w-4xl p-8">
       <h1 class="text-3xl font-bold text-black">Welcome to MeteoSpark Dashboard</h1>
       <p id="emailDisplay" class="text-slate-500 mt-2"></p>
-      <button id="btnLogout" class="mt-6 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Sign Out</button>
+      <button id="btn-logout" class="mt-6 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Sign Out</button>
     </div>
 
     <script type="module" src="/src/main.js"></script>
