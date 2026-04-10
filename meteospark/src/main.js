@@ -18,6 +18,9 @@ const btnPredict = document.getElementById('btn-predict')
 const learnContainer = document.getElementById('learn-container')
 const btnBack = document.getElementById('btn-back')
 
+const toggleDark = document.getElementById('btn-toggle-dark')
+const htmlElement = document.documentElement
+
 const showMsg = (message, isError = false) => {
   authMsg.textContent = message
   authMsg.className = `text-sm text-center block ${isError ? 'text-red-500' : 'text-green-600'}`
@@ -102,3 +105,23 @@ const meteoLearn = [
     content: "Clouds are categorized by their altitude and shape. Let's learn about it.."
   }
 ]
+
+if (
+  localStorage.getItem('theme') === 'dark' ||
+  (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+) {
+  htmlElement.classList.add('dark')
+} else {
+  htmlElement.classList.remove('dark')
+}
+
+toggleDark.addEventListener('click', () => {
+  htmlElement.classList.toggle('dark')
+  
+
+  if (htmlElement.classList.contains('dark')) {
+    localStorage.setItem('theme', 'dark')
+  } else {
+    localStorage.setItem('theme', 'light')
+  }
+})
