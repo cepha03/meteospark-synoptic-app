@@ -110,7 +110,55 @@ export function startGame(){
     liveScore.textContent = `Score: ${currentScore}`
 
     gridOption.innerHTML='' //clears the buttons from previous questions
+
+    //array of colour classes used for the game design (buttons)
+    const quizColour = [
+      'bg-red-500', 
+      'bg-blue-500', 
+      'bg-yellow-500', 
+      'bg-green-500'
+    ]
+
+    //loop through the four opetions and create a button for each 
+    currentQuestion.options.forEach((option, index) =>{
+
+        const btn = document.createElement('button')
+        btn.className = `${quizColour[index]} text-white font-bold py-6 px-4 rounded-xl shadow-sm transition-transform transform-gpu hover:-translate-y-1 text-lg`
+        btn.textContent = option
+
+        //when button is clicked, check to see if index matches 
+        btn.addEventListener('click', () => manageAnswer(index, currentQuestion.correctIndex))
+        gridOption.appendChild(btn) //add new button to the grid
+
+    })
   }
+
+  //check answer to move onto the next or end game 
+  function manageAnswer(selectIndex, correctIndex)
+  {
+    //increment score by 1 if correct option is selected
+    if(selectIndex===correctIndex)
+    {
+        currentScore++
+    }
+
+    currentIndex++ //move to next question
+
+    //check if questions are left
+    if(currentQuestion < questionBank.length)
+    {
+        loadQuestion() 
+    }
+    else
+    {
+        endScreen() //if no question left, end game
+    }
+  }
+
+
+
+
+
 
 
 
