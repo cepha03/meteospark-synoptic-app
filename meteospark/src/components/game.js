@@ -1,4 +1,4 @@
-import { supabase } from '../supabase.js' //import supabase from the js file to interact with user score submission
+import { supabase } from '../supabaseInfo.js' //import supabase from the js file to interact with user score submission
 
 export function startGame(){
 
@@ -6,11 +6,11 @@ export function startGame(){
     const gameContainer = document.getElementById('game-container')
     const dashboardContainer = document.getElementById('dashboard-container')
     const btnGameBack = document.getElementById('btn-gameBack')
-    const startScreen = document.getElementById('quiz=start')
-    const activeScreen = document.getElementById('quiz=active')
+    const startScreen = document.getElementById('quiz-start')
+    const activeScreen = document.getElementById('quiz-active')
     const endScreen = document.getElementById('quiz-end')
 
-    const textQuestion = document.getElementById('quiz-question-text')
+    const textQuestion = document.getElementById('quiz-question-txt')
     const gridOption = document.getElementById('quiz-options-grid')
     const quizProgress = document.getElementById('quiz-progress')
     const liveScore = document.getElementById('quiz-score-live')
@@ -54,31 +54,13 @@ export function startGame(){
     {
         question: "Which phenomenon is an eastward-moving 'pulse' near the equator?",
         options: ["ENSO", "The Jet Stream", "Madden-Julian Oscillation", "Gulf stream"],
-        correctIndex: 3
+        correctIndex: 2
     }
   ]
 
   //current game state variables set to 0, required to track progress 
   let currentIndex = 0
   let currentScore = 0
-
-  //function to start game, from start screen 
-  function startGame()
-  {
-    startScreen.classList.add('hidden')
-    activeScreen.classList.remove('hidden')
-    loadQuiz()
-  }
-
-  //function to reset game back to start screen. game state variables set to 0. 
-  function resetGame()
-  {
-    currentIndex = 0
-    currentScore = 0
-    startScreen.classList.remove('hidden') //toggle to only show start screen. 
-    activeScreen.classList.remove('hidden')
-    endScreen.classList.remove('hidden')
-  }
 
   //event handler to hide game and show dashboard. resets game state
   if(btnGameBack)
@@ -100,8 +82,26 @@ export function startGame(){
     btnPlayAgain.addEventListener('click', resetGame)
   }
 
+   //function to start game, from start screen 
+  function startGame()
+  {
+    startScreen.classList.add('hidden')
+    activeScreen.classList.remove('hidden')
+    loadQuiz()
+  }
+
+  //function to reset game back to start screen. game state variables set to 0. 
+  function resetGame()
+  {
+    currentIndex = 0
+    currentScore = 0
+    startScreen.classList.remove('hidden') //toggle to only show start screen. 
+    activeScreen.classList.add('hidden')
+    endScreen.classList.add('hidden')
+  }
+
   //function to load questions and generates the buttons to interact with the game
-  function loadQuestion()
+  function loadQuiz()
   {
     //update UI text for next questions and score. 
     const currentQuestion = questionBank[currentIndex]
@@ -145,13 +145,72 @@ export function startGame(){
     currentIndex++ //move to next question
 
     //check if questions are left
-    if(currentQuestion < questionBank.length)
+    if(currentIndex < questionBank.length)
     {
-        loadQuestion() 
+        loadQuiz() 
     }
     else
     {
-        endScreen() //if no question left, end game
+        endGame() //if no question left, end game
+    }
+  }
+
+  //aysn function to contact the db to save the scorewhen the user finishes the game
+  async function endGame(){
+
+    //show end screen to display the final score when game is completed
+    activeScreen.classList.add('hidden')
+    endScreen.classList.remove('hidden')
+    finalScore.textContent = `${currentScore}/${questionBank.length}`
+
+    //validation for if game doesn't save score, halt execution
+    if(!saveStatus)
+    {
+        return
+    }
+
+    //display msg when game is completed
+    saveStatus.textContent = 'Saving score to your account..'
+    saveStatus.className = 'text-sm text-black-500 font-medium mb-6'
+
+    //exception handling for supabase auth
+    try
+    {
+        //get user data (uid) from supabase auth
+        const{data: {user}, error: authError} = await supabase.auth.getUser()
+
+        //if auth error occurs or user not present, display error msg 
+        if(authError || !user)
+        {
+            throw new Error('Could not access user. Try to log out again')
+        }
+
+        //insert new row in users quiz_scores table
+        const { error: insertError } = await supabase
+        .from('quiz_scores')
+        .insert([{ 
+          user_id: user.id, //tie the score to this specific user's ID
+          score: currentScore, 
+          total_questions: questionBank.length 
+        }])
+
+        //if db rejects entry, throw error
+        if(insertError)
+        {
+            throw insertError
+        }
+
+        //db success msg, tailwind css rules to display text
+        saveStatus.textContent = 'Score saved to your user'
+        saveStatus.className = 'text-sm text-green-500 font-medium mb-6'
+
+    }
+    catch(err) //catch error and show unsuccess saved msg
+    {
+        console.error('Error saving score. Try again', err)
+        saveStatus.textContent = 'Could not save score. Try again'
+        saveStatus.className = 'text-sm text-green-500 font-medium mb-6'
+
     }
   }
 
