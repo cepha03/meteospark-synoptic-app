@@ -21,6 +21,8 @@ export function startGame(){
     const btnStart = document.getElementById('btn-startQuiz')
     const btnPlayAgain = document.getElementById('btn-playAgain')
 
+    const timerShow = document.getElementById('quiz-timer')
+
     //error handling if a page doesnt have a game controller, halt execution
     if(!gameContainer)
     {
@@ -61,6 +63,22 @@ export function startGame(){
   //current game state variables set to 0, required to track progress 
   let currentIndex = 0
   let currentScore = 0
+  let activeQ = []
+  let timeLeft = 60
+  let timeInt = null
+
+  //shuffle algorithm to change the order of which the questions are stacked
+  function shuffleArr(arr)
+  {
+    const shuffle = [...arr]
+
+    for (let i=shuffle.length -1; i>0;i--)
+    {
+        const j = Math.floor(Math.random() * (i+1));
+        [shuffle[i], shuffle[j]] = [shuffle[j], shuffle[i]]
+    }
+    return shuffle
+  }
 
   //event handler to hide game and show dashboard. resets game state
   if(btnGameBack)
@@ -85,6 +103,31 @@ export function startGame(){
    //function to start game, from start screen 
   function startGame()
   {
+
+    activeQ = shuffleArr(questionBank) //shuffle function called to initiate
+    timeLeft = 60
+
+    if(timerShow)
+    {
+        timerShow.textContent = `${timeLeft}s`
+    }
+
+    clearInterval(timeInt) //time interval cleared and reset
+    timeInt = setInterval(() => {
+        timeLeft--
+
+        if(timerShow)
+        {
+            timerShow.textContent = `${timeLeft}s`
+        }
+
+        if(timeLeft <=0)
+        {
+            clearInterval(timeInt)
+            endGame()
+        }
+    }, 1000)
+
     startScreen.classList.add('hidden')
     activeScreen.classList.remove('hidden')
     loadQuiz()
@@ -93,6 +136,7 @@ export function startGame(){
   //function to reset game back to start screen. game state variables set to 0. 
   function resetGame()
   {
+    clearInterval(timeInt)
     currentIndex = 0
     currentScore = 0
     startScreen.classList.remove('hidden') //toggle to only show start screen. 
@@ -104,9 +148,9 @@ export function startGame(){
   function loadQuiz()
   {
     //update UI text for next questions and score. 
-    const currentQuestion = questionBank[currentIndex]
+    const currentQuestion = activeQ[currentIndex]
     textQuestion.textContent = currentQuestion.question
-    quizProgress.textContent = `Question ${currentIndex + 1}/${questionBank.length}`
+    quizProgress.textContent = `Question ${currentIndex + 1}/${activeQ.length}`
     liveScore.textContent = `Score: ${currentScore}`
 
     gridOption.innerHTML='' //clears the buttons from previous questions
@@ -157,6 +201,8 @@ export function startGame(){
 
   //aysn function to contact the db to save the scorewhen the user finishes the game
   async function endGame(){
+
+    clearInterval(timeInt)
 
     //show end screen to display the final score when game is completed
     activeScreen.classList.add('hidden')
