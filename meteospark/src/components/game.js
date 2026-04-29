@@ -147,6 +147,7 @@ export function initGame(){
 
         if(timerShow)
         {
+            timerShow.parentElement.classList.remove('hidden')
             timerShow.textContent = `${timeLeft}s`
         }
 
@@ -170,8 +171,12 @@ export function initGame(){
     else if(mode === 'forecaster')
     {
         activeQ = shuffleArr(forecasterBank)
-        timerShow.parentElement.classList.add('hidden')
+
+        if(timerShow) {
+            timerShow.parentElement.classList.add('hidden')
+        }
         clearInterval(timeInt)
+        
     }
 
     startScreen.classList.add('hidden')
