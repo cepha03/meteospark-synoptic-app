@@ -4,13 +4,13 @@ import { startAuth } from './components/auth.js'
 import { startTheme } from './components/theme.js'
 import { startPredict } from './components/predict.js'
 import { startLearn } from './components/learn.js'
-import { startGame } from './components/game.js'
+import { initGame } from './components/game.js'
 
 startAuth()
 startTheme()
 startLearn()
 startPredict()
-startGame()
+initGame()
 
 const dashboardContainer = document.getElementById('dashboard-container')
 const btnLearn = document.getElementById('btn-learn')

@@ -1,6 +1,6 @@
 import { supabase } from '../supabaseInfo.js' //import supabase from the js file to interact with user score submission
 
-export function startGame(){
+export function initGame(){
 
     //all DOM elements implemented for later use 
     const gameContainer = document.getElementById('game-container')
@@ -18,7 +18,8 @@ export function startGame(){
     const saveStatus = document.getElementById('save-status')
 
     //buttons for game events 
-    const btnStart = document.getElementById('btn-startQuiz')
+    const btnRapid = document.getElementById('btn-rapid')
+    const btnForecaster = document.getElementById('btn-forecaster')
     const btnPlayAgain = document.getElementById('btn-playAgain')
 
     const timerShow = document.getElementById('quiz-timer')
@@ -60,12 +61,41 @@ export function startGame(){
     }
   ]
 
+  const forecasterBank = [
+    {   
+        question: "It is January. The NAO index has dropped to a severely negative -1.8. What should the UK prepare for?", 
+        options: ["A winter heatwave", "Heavy monsoons", "Bitter cold and snow", "Mild, cloudy weather"], 
+        correctIndex: 2 
+    },
+    {   
+        question: "It's December, and both the AO and NAO are strongly positive. What gear should locals prepare?", 
+        options: ["Umbrellas and light jackets", "Heavy snow boots", "Sunscreen and shorts", "T-shirts only"], 
+        correctIndex: 0 
+    },
+    { 
+        question: "An ML model predicts a temperature of 5.5°C. Which month is this most likely to be?", 
+        options: ["January", "July", "November", "March"], 
+        correctIndex: 1 
+    },
+    { 
+        question: "Historical data shows a UK average monthly temperature of just 2.2°C. What phase was the NAO most likely in?", 
+        options: ["Strongly Positive", "Neutral", "Strongly Negative", "No change"], 
+        correctIndex: 2 
+    },
+    { 
+        question: "The Jet Stream has moved far to the south of the UK. What weather system is likely being pulled down over the country?", 
+        options: ["Tropical Saharan air", "Arctic polar air", "Equatorial monsoons", "The Gulf Stream"], 
+        correctIndex: 1 
+    }
+  ]
+
   //current game state variables set to 0, required to track progress 
   let currentIndex = 0
   let currentScore = 0
   let activeQ = []
   let timeLeft = 60
   let timeInt = null
+  let currentMode = '' //track current mode of game
 
   //shuffle algorithm to change the order of which the questions are stacked
   function shuffleArr(arr)
@@ -91,9 +121,13 @@ export function startGame(){
   }
 
   //click events to start game and reset  
-  if(btnStart)
+  if(btnRapid)
   {
-    btnStart.addEventListener('click', startGame)
+    btnRapid.addEventListener('click', () => startGame('rapid'))
+  }
+  if(btnForecaster)
+  {
+    btnForecaster.addEventListener('click', () => startGame('forecaster'))
   }
   if(btnPlayAgain)
   {
@@ -101,32 +135,44 @@ export function startGame(){
   }
 
    //function to start game, from start screen 
-  function startGame()
+  function startGame(mode)
   {
 
-    activeQ = shuffleArr(questionBank) //shuffle function called to initiate
-    timeLeft = 60
+    currentMode = mode
 
-    if(timerShow)
+    if(mode === 'rapid')
     {
-        timerShow.textContent = `${timeLeft}s`
-    }
-
-    clearInterval(timeInt) //time interval cleared and reset
-    timeInt = setInterval(() => {
-        timeLeft--
+        activeQ = shuffleArr(questionBank) //shuffle function called to initiate
+        timeLeft = 60
 
         if(timerShow)
         {
             timerShow.textContent = `${timeLeft}s`
         }
 
-        if(timeLeft <=0)
-        {
-            clearInterval(timeInt)
-            endGame()
-        }
-    }, 1000)
+        clearInterval(timeInt) //time interval cleared and reset
+        timeInt = setInterval(() => {
+            timeLeft--
+
+            if(timerShow)
+            {
+                timerShow.textContent = `${timeLeft}s`
+            }
+
+            if(timeLeft <=0)
+            {
+                clearInterval(timeInt)
+                endGame()
+            }
+        }, 1000)
+
+    }
+    else if(mode === 'forecaster')
+    {
+        activeQ = shuffleArr(forecasterBank)
+        timerShow.parentElement.classList.add('hidden')
+        clearInterval(timeInt)
+    }
 
     startScreen.classList.add('hidden')
     activeScreen.classList.remove('hidden')
@@ -207,7 +253,7 @@ export function startGame(){
     //show end screen to display the final score when game is completed
     activeScreen.classList.add('hidden')
     endScreen.classList.remove('hidden')
-    finalScore.textContent = `${currentScore}/${questionBank.length}`
+    finalScore.textContent = `${currentScore}/${activeQ.length}`
 
     //validation for if game doesn't save score, halt execution
     if(!saveStatus)
