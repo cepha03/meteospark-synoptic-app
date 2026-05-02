@@ -3,10 +3,16 @@ from flask_cors import CORS
 import pickle
 import pandas as pd
 import json
+import os
 
 app = Flask(__name__)
 # allow vite frontend to communicate with API
-CORS(app, resources={r"/predict": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/predict": {
+    "origins": [
+        "http://localhost:5173", 
+        "https://meteospark-synoptic-app.vercel.app/ 
+    ]
+}})
 
 # load the trained model and expected columns on startup
 print("Loading ML Model..")
@@ -57,5 +63,5 @@ def predict():
 
 if __name__ == '__main__':
     # run the server on port 5000
-    print("MeteoSpark ML is running on http://localhost:5000")
-    app.run(port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
