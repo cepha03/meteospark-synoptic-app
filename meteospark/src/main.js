@@ -5,12 +5,14 @@ import { startTheme } from './components/theme.js'
 import { startPredict } from './components/predict.js'
 import { startLearn } from './components/learn.js'
 import { initGame } from './components/game.js'
+import { initProfile } from './components/profile.js'
 
 startAuth()
 startTheme()
 startLearn()
 startPredict()
 initGame()
+initProfile()
 
 const dashboardContainer = document.getElementById('dashboard-container')
 const btnLearn = document.getElementById('btn-learn')
