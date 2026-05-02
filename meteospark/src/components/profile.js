@@ -105,6 +105,10 @@ export function initProfile() {
         {
             displayMode = 'Be the Forecaster!'
         }
+        else if (row.game_mode === 'truefalse')
+        {
+            displayMode = 'True or False!'
+        }
 
       
 

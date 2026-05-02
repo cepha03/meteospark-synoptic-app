@@ -20,6 +20,7 @@ export function initGame(){
     //buttons for game events 
     const btnRapid = document.getElementById('btn-rapid')
     const btnForecaster = document.getElementById('btn-forecaster')
+    const btnTrueFalse = document.getElementById('btn-trueFalse')
     const btnPlayAgain = document.getElementById('btn-playAgain')
 
     const timerShow = document.getElementById('quiz-timer')
@@ -89,6 +90,29 @@ export function initGame(){
     }
   ]
 
+  const trueFalseBank = [
+        { 
+            question: "The UK has never reached above 40C.", 
+            options: ["True", "False"], 
+            correctIndex: 1 }, // False
+        { 
+            question: "High atmospheric pressure usually brings clear, sunny skies.", 
+            options: ["True", "False"], 
+            correctIndex: 0 }, // True
+        { 
+            question: "The Gulf Stream originates in the freezing Arctic Ocean.", 
+            options: ["True", "False"], 
+            correctIndex: 1 }, // False
+        { 
+            question: "A negative NAO index strongly correlates with colder UK winters.", 
+            options: ["True", "False"], 
+            correctIndex: 0 }, // True
+        { 
+            question: "Tornadoes never happen in the United Kingdom.", 
+            options: ["True", "False"], 
+            correctIndex: 1 } // False
+    ]
+
   //current game state variables set to 0, required to track progress 
   let currentIndex = 0
   let currentScore = 0
@@ -129,6 +153,10 @@ export function initGame(){
   {
     btnForecaster.addEventListener('click', () => startGame('forecaster'))
   }
+  if(btnTrueFalse)
+  {
+    btnTrueFalse.addEventListener('click', () => startGame('truefalse'))
+  }
   if(btnPlayAgain)
   {
     btnPlayAgain.addEventListener('click', resetGame)
@@ -140,10 +168,10 @@ export function initGame(){
 
     currentMode = mode
 
-    if(mode === 'rapid')
+    if(mode === 'rapid' || mode === 'truefalse')
     {
-        activeQ = shuffleArr(questionBank) //shuffle function called to initiate
-        timeLeft = 60
+        activeQ = shuffleArr(mode === 'rapid' ? questionBank : trueFalseBank) //shuffle function called to initiate
+        timeLeft = mode === 'rapid' ? 60 : 30
 
         if(timerShow)
         {
@@ -206,26 +234,43 @@ export function initGame(){
 
     gridOption.innerHTML='' //clears the buttons from previous questions
 
-    //array of colour classes used for the game design (buttons)
-    const quizColour = [
-      'bg-red-500', 
-      'bg-blue-500', 
-      'bg-yellow-500', 
-      'bg-green-500'
-    ]
 
-    //loop through the four opetions and create a button for each 
-    currentQuestion.options.forEach((option, index) =>{
+    if (currentMode === "truefalse")
+    {
+        const tfColour = ['bg-green-500 hover:bg-green-600', 'bg-red-500 hover:bg-red-600']
 
-        const btn = document.createElement('button')
-        btn.className = `${quizColour[index]} text-white font-bold py-6 px-4 rounded-xl shadow-sm transition-transform transform-gpu hover:-translate-y-1 text-lg`
-        btn.textContent = option
+        currentQuestion.options.forEach((option, index)=>{
+            const btn = document.createElement('button')
 
-        //when button is clicked, check to see if index matches 
-        btn.addEventListener('click', () => manageAnswer(index, currentQuestion.correctIndex))
-        gridOption.appendChild(btn) //add new button to the grid
+            btn.className = `${tfColour[index]} text-white font-black py-16 px-4 rounded-2xl shadow-md transition-transform transform-gpu hover:-translate-y-2 text-4xl uppercase tracking-wider`
+            btn.textContent = option
+            btn.addEventListener('click', () => manageAnswer(index, currentQuestion.correctIndex))
+            gridOption.appendChild(btn)
+        })
+    }
+    else
+    {
+        const quizColour = [
+            'bg-red-500', 
+            'bg-blue-500', 
+            'bg-yellow-500', 
+            'bg-green-500'
+        ]
 
-    })
+        //loop through the four opetions and create a button for each 
+        currentQuestion.options.forEach((option, index) =>{
+
+            const btn = document.createElement('button')
+            btn.className = `${quizColour[index]} text-white font-bold py-6 px-4 rounded-xl shadow-sm transition-transform transform-gpu hover:-translate-y-1 text-lg`
+            btn.textContent = option
+
+            //when button is clicked, check to see if index matches 
+            btn.addEventListener('click', () => manageAnswer(index, currentQuestion.correctIndex))
+            gridOption.appendChild(btn) //add new button to the grid
+
+        })
+    }
+
   }
 
   //check answer to move onto the next or end game 
@@ -240,7 +285,7 @@ export function initGame(){
     currentIndex++ //move to next question
 
     //check if questions are left
-    if(currentIndex < questionBank.length)
+    if(currentIndex < activeQ.length)
     {
         loadQuiz() 
     }
@@ -288,7 +333,7 @@ export function initGame(){
         .insert([{ 
           user_id: user.id, //tie the score to this specific user's ID
           score: currentScore, 
-          total_questions: questionBank.length,
+          total_questions: activeQ.length,
           game_mode: currentMode
         }])
 
