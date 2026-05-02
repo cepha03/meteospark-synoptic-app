@@ -96,9 +96,21 @@ export function initProfile() {
       if (scorePercent >= 80) badgeColor = 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
       else if (scorePercent >= 50) badgeColor = 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
 
+      let displayMode = 'Meteorology Quiz'
+        if(row.game_mode === 'rapid')
+        {
+            displayMode = 'Beat the Clock!'
+        }
+        else if (row.game_mode === 'forecaster')
+        {
+            displayMode = 'Be the Forecaster!'
+        }
+
+      
+
       li.innerHTML = `
         <div>
-          <p class="font-medium text-slate-800 dark:text-white">Beat the clock! Meteorology Quiz</p>
+          <p class="font-bold text-slate-800 dark:text-white">${displayMode}</p>
           <p class="text-sm text-slate-500">${dateStr}</p>
         </div>
         <div class="px-3 py-1 rounded-full text-sm font-bold ${badgeColor}">

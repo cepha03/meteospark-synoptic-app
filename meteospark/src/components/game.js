@@ -176,7 +176,7 @@ export function initGame(){
             timerShow.parentElement.classList.add('hidden')
         }
         clearInterval(timeInt)
-        
+
     }
 
     startScreen.classList.add('hidden')
@@ -288,7 +288,8 @@ export function initGame(){
         .insert([{ 
           user_id: user.id, //tie the score to this specific user's ID
           score: currentScore, 
-          total_questions: questionBank.length 
+          total_questions: questionBank.length,
+          game_mode: currentMode
         }])
 
         //if db rejects entry, throw error
