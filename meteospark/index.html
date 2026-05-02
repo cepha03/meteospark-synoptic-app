@@ -7,7 +7,7 @@
     <title>MeteoSpark</title>
   </head>
 
-  <body class="bg-gradient-to-r from-green-200 to-cyan-200 flex items-center justify-center min-h-screen font-sans text-slate-800">
+  <body class="bg-gradient-to-r from-green-200 to-cyan-200 flex items-center justify-center min-h-screen font-sans text-slate-800 overflow-x-hidden w-full">
 
     <div id="auth-block" class="w-full max-w-md p-8 bg-slate-200 w-full rounded-xl max-w-d p-5 bg-gray-200 shadow-lg mx-4">
 
@@ -51,9 +51,9 @@
 
     <div id="dashboard-container" class="hidden w-full min-h-screen bg-gradient-to-t from-green-200 to-cyan-200 dark:from-blue-900 dark:to-purple-900">
       
-      <nav class="bg-white dark:bg-black shadow-sm px-4 py-3 flex justify-between items-center sticky top-0 z-10">
+      <nav class="bg-white dark:bg-black shadow-sm px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4 sticky top-0 z-10 w-full">
         <h1 class="text-[40px] text-center font-bold text-blue-600 tracking-tight">MeteoSpark</h1>
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap justify-center items-center gap-2 sm:gap-3">
           <span id="user-email-display" class="text-sm text-slate-600 dark:text-white hidden sm:block"></span>
           <button id="btn-profile" class="text-sm bg-black font-medium text-white dark:text-slate-300 px-3 py-1.5 rounded-lg hover:-translate-y-0.5 dark:hover:bg-purple-800 transition-colors">
             My Stats
