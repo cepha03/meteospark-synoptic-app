@@ -18,11 +18,27 @@ const curriculumData = {
       {
         title: "The Gulf Stream",
         content: "The Gulf Stream is a warm and swift Atlantic ocean current that originates in the Gulf of Mexico. It drastically influences the UK's climate, making our winters significantly milder than other regions at a similar latitude (like Canada or Russia)."
+      },
+      {
+        title: "Snow and Ice",
+        content: "Snow is a type of precipitation that crystalises when the air temperature is at or below 0C. The fluffy nature is microscopic air pockets trapped between crystals. Ice is solid water, with molecules packed tightly and usually found with snow."
+      },
+      {
+        title: "Precipitation",
+        content: "Precipitation is any form of water, whether that be rain, sleet or hail that falls from the atmosphere. It is a key component of the water cycle."
+      },
+      {
+        title: "Tornadoes",
+        content: "Tornadoes are violent rotating columns of air that extend from a thunderstorm (Cumulonimbus cloud). They are very common, and destructive in the USA found in the colloquially known 'Tornado Alley', but it is said that England has the highest tornado density (2.2 per 10000km^2)."
+      },
+      {
+        title: "Cyclones and Hurricanes",
+        content: "Cyclones and Hurricanes are essentially the same weather phenomenon, consisting of giant rotating tropical storm systems which are formed when ocean temperatures reach >26C. This moisture and heat collides with cool air aloft resulting in poweful systems."
       }
     ]
   },
   atmosphere: {
-    title: "All About the Atmosphere",
+    title: "All About Meteorology",
     icon: "🌍",
     lessons: [
       {
