@@ -1,3 +1,5 @@
+
+//data objects required for the learn page 
 const curriculumData = {
   climate: {
     title: "Climate & Weather Phenomenon",
@@ -95,10 +97,14 @@ const curriculumData = {
   }
 }
 
+//function to initiate learn functions 
 export function startLearn() {
+
+    //const variables for button event clickers
     const btnLearnBack = document.getElementById('btn-learn-back')
     const learnHeaderTitle = document.getElementById('learn-header-title')
 
+    //const variables for viewing elements
     const viewTopics = document.getElementById('learn-topics-view')
     const viewLessons = document.getElementById('learn-lessons-view')
     const viewContent = document.getElementById('learn-content-view')
@@ -107,6 +113,7 @@ export function startLearn() {
     let activeTopicId = null
 
 
+    //render all topics once viewLessons button is pressed
     function renderTopics() {
         viewTopics.innerHTML = ''
   
@@ -126,6 +133,7 @@ export function startLearn() {
         }
     }
 
+    //function to render lessons within the topics 
     function renderLessons(topicId) {
         const category = curriculumData[topicId]
         learnHeaderTitle.textContent = category.title
@@ -164,20 +172,20 @@ export function startLearn() {
     //back Button Logic for the Learn Section
     btnLearnBack.addEventListener('click', () => {
         if (currentLearnState === 'content') {
-            //go back to the lesson list
+            //back to the lesson list
             viewContent.classList.add('hidden')
             viewLessons.classList.remove('hidden')
             currentLearnState = 'lessons'
         } 
         else if (currentLearnState === 'lessons') {
-            //go back to the main topics list
+            //back to the main topics list
             viewLessons.classList.add('hidden')
             viewTopics.classList.remove('hidden')
             learnHeaderTitle.textContent = 'Learn Meteorology'
             currentLearnState = 'topics'
         } 
         else {
-            //at the root 'topics' level, so go back to the Dashboard
+            //at the root topics level, back to the Dashboard
             document.getElementById('learn-container').classList.add('hidden')
             document.getElementById('dashboard-container').classList.remove('hidden')
         }

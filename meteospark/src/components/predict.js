@@ -32,7 +32,7 @@ export function startPredict(){
         }
 
         try {
-            //send POST request to flask backend
+            //send POST request to flask backend. utilises render api link to access ml components 
             const response = await fetch('https://meteospark-ml-backend.onrender.com/predict', {
                 method: 'POST',
                 headers: {
